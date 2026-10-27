@@ -1,0 +1,6 @@
+{
+  "enabledPlugins": {
+    "oh-my-claudecode@omc": false,
+    "ecc@ecc": true
+  }
+}

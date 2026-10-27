@@ -1,0 +1,4 @@
+# Same bytes on Windows, macOS and Linux (splits.csv must be identical everywhere)
+* text=auto eol=lf
+*.parquet binary
+*.png binary

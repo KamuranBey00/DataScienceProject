@@ -1,0 +1,24 @@
+# Environment
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.pytest_cache/
+
+# Raw data is downloaded by src.data.load_raw(); processed data IS committed
+data/raw/
+
+# Large or regenerable model artifacts
+models/*.pkl
+models/*.zip
+models/*.db
+models/tabnet*/
+catboost_info/
+lightning_logs/
+
+# Local tooling / course material
+.claude/settings.local.json
+*.docx
+
+# Superseded drafts
+.claude/plans/archive/
