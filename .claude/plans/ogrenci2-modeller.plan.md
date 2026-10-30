@@ -58,7 +58,14 @@ doğrudan `VARIANT = "clean"` ile başlanır. Artırılmış train setleri: `smo
 ## Phase 2: LightGBM + Optuna
 
 ### Sprint 2.1: Default LGBM + CV fonksiyonu
-- [ ] 5-fold `StratifiedKFold`, `n_estimators=2000`, `early_stopping(100)`, ortalama PR-AUC
+- [x] 5-fold `StratifiedKFold`, `n_estimators=2000`, `early_stopping(100)`, ortalama PR-AUC
+  (`cv_lgbm`, Optuna için `trial` ile fold bazlı pruning raporu)
+- [x] Kategorik ayar CV'de ölçüldü: sayısal / nominal kat. / nominal+PAY kat. = 0,563 / 0,563 /
+  0,561 (std 0,011) → anlamı doğru olan seçildi: nominal kategorik, PAY_x sayısal (sıralı)
+- Tuzak notu: LightGBM kategorik kolondaki negatif değerleri eksik sayar (PAY_x −2/−1) →
+  `CAT_LEVELS` ile sabit pandas `category` tipi
+- Sonuç: varsayılan LGBM CV PR-AUC 0,563 ± 0,011 (59 ağaç); val macro-F1 0,707, ROC-AUC 0,778,
+  PR-AUC 0,553 (Perceptron 0,636 / 0,676 / 0,407), Ö1'in 0,707 / 0,777'siyle örtüşüyor
 - **Kavramlar:** gradient boosting, early stopping, `categorical_feature`
 
 ### Sprint 2.2: Optuna
