@@ -38,9 +38,13 @@ doğrudan `VARIANT = "clean"` ile başlanır. Artırılmış train setleri: `smo
 - **Kavramlar:** macro-F1, PR-AUC, accuracy neden yanıltıcı
 
 ### Sprint 1.2: Perceptron taraması
-- [ ] `Pipeline(make_preprocessor("linear"), Perceptron)`
-- [ ] `eta0 × penalty × alpha × class_weight` taraması, val'de macro-F1 ile seçim
-- [ ] Skor `decision_function`, eşik `pick_threshold`
+- [x] `Pipeline(make_preprocessor("linear"), Perceptron)`
+- [x] `eta0 × penalty × alpha × class_weight` taraması, val'de macro-F1 ile seçim
+  (ekip planından sapma: 5 tohum ortalaması, çünkü tohum varyansı ±0,05 > konfigürasyon farkları)
+- [x] Skor `decision_function`, eşik `pick_threshold`
+- Sonuç: l2, eta0=1e-3, alpha=1e-3 → macro-F1 0,636 ± 0,030, PR-AUC 0,407 (`reports/perceptron_sweep.csv`)
+- Savunma notu: `eta0` sabit epoch'ta tamamen etkisiz (5 tohumda kanıtlı); sklearn'deki küçük
+  farkın sebebi `tol`'un mutlak eşik olması → durma epoch'u değişiyor
 - **Kavramlar:** Pipeline, sızıntı, `eta0` neden tek başına etkisiz
 
 ### Sprint 1.3: Öğrenme eğrisi
