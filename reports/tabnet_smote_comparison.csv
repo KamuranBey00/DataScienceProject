@@ -1,0 +1,3 @@
+train_variant,val_auc
+clean,0.7752565090629467
+smote,0.7568830578443527
