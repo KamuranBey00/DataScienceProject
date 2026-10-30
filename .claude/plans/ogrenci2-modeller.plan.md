@@ -25,7 +25,7 @@ doğrudan `VARIANT = "clean"` ile başlanır. Artırılmış train setleri: `smo
 
 ### Sprint 0.2: Branch ve Ö1'in verisi
 - [x] `ArmaganBranch` main'den açıldı
-- [ ] `origin/ogrenci1/veri` bu branch'e merge
+- [x] `origin/ogrenci1/veri` bu branch'e merge (çakışmasız, 20 test geçti, 5 varyant doğrulandı)
 - [ ] Ö1'e main'e PR açmasını hatırlat
 - **Bitti:** `load_split("train", "clean")`, `"smote"`, `"ctgan"` çalışıyor
 
