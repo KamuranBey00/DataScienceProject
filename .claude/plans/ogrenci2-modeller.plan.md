@@ -48,8 +48,12 @@ doğrudan `VARIANT = "clean"` ile başlanır. Artırılmış train setleri: `smo
 - **Kavramlar:** Pipeline, sızıntı, `eta0` neden tek başına etkisiz
 
 ### Sprint 1.3: Öğrenme eğrisi
-- [ ] `partial_fit` ile epoch bazlı train/val macro-F1 + hinge kaybı
-- [ ] `figures/extra_perceptron_curve.png`
+- [x] `partial_fit` ile epoch bazlı train/val macro-F1 + Perceptron kaybı (5 tohum × 50 tur)
+- [x] `figures/extra_perceptron_curve.png`
+- Sonuç: öğrenme 1. turda bitiyor (val 0,601 → 50. tur 0,583), train ≈ val → overfitting yok,
+  underfitting + yakınsamama. Tavan ≈0,60–0,64.
+- Tuzak notu: `random_state=int` ile `partial_fit` her tur aynı karıştırma sırasını kullanıyor
+  (sklearn her çağrıda üreteci yeniden kuruyor) → `np.random.RandomState(seed)` nesnesi verildi
 
 ## Phase 2: LightGBM + Optuna
 
