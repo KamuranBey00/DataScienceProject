@@ -155,7 +155,8 @@ def plot_importance_and_masks(step_masks, tabnet_importance, lgbm_importance, fe
     decides the order, e.g. sorted by tabnet_importance).
     """
     lgbm_norm = np.asarray(lgbm_importance, dtype=float)
-    lgbm_norm = lgbm_norm / lgbm_norm.sum()
+    total = lgbm_norm.sum()
+    lgbm_norm = lgbm_norm / total if total > 0 else lgbm_norm
 
     fig, (ax_mask, ax_tabnet, ax_lgbm) = plt.subplots(1, 3, figsize=(15, 5))
 
