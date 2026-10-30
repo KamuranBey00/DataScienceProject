@@ -90,11 +90,14 @@ doğrudan `VARIANT = "clean"` ile başlanır. Artırılmış train setleri: `smo
 ## Phase 3: Varyantlar ve final
 
 ### Sprint 3.1: Varyant karşılaştırması
-- [ ] 2 model × {clean, smote, ctgan}, yalnızca gerçek val'de; artırılmış veride CV yok
-- [ ] Dengelenmiş veride `scale_pos_weight=1`
-- [ ] `reports/train_variant_comparison.csv`
-- [ ] Ö1'in bulgusuyla kıyas: sabit parametreli LGBM'de artırma kazanç sağlamadı
+- [x] 2 model × {clean, smote, ctgan}, yalnızca gerçek val'de; artırılmış veride CV yok
+  (iki model de 5 tohum; LGBM'de subsample/colsample rastgele)
+- [x] Dengelenmiş veride `scale_pos_weight=1`
+- [x] `reports/train_variant_comparison.csv`
+- [x] Ö1'in bulgusuyla kıyas: sabit parametreli LGBM'de artırma kazanç sağlamadı
   (val Macro-F1 0,707 → SMOTE 0,698 / CTGAN 0,689, `reports/tstr_trtr.csv`)
+- Sonuç: LGBM 0,709 → 0,695 / 0,689 (std ≈0,001); Perceptron 0,636 → 0,567 / 0,584.
+  İki model için de en iyi `clean` → final `clean` ile
 - **Kavramlar:** SMOTE + CV sızıntısı, `scale_pos_weight` vs SMOTE
 
 ### Sprint 3.2: Final + CP-C
