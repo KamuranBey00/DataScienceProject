@@ -6,10 +6,13 @@
 **Çalışma şekli:** Her sprint'te önce kavram anlatılır, sonra kod hücre hücre birlikte yazılır.
 Bir sprint "bitti" kriteri sağlanmadan sonrakine geçilmez.
 
+**Veri kararı:** Ekip planındaki `v0` (ham veri) yalnızca Ö1'in verisi gelene kadar bir yedekti
+(ekip planı satır 20, 273). Ö1 CP-A ve CP-B'yi `ogrenci1/veri` branch'inde bitirdi, bu yüzden
+doğrudan `VARIANT = "clean"` ile başlanır. Artırılmış train setleri: `smote`, `ctgan`.
+
 **Varsayımlar**
 - Hocanın dokümanı (`Tabular_Data_Classification_Project_HW.docx`) ekip planıyla uyumlu.
-- Ö1'in `clean/smote/ctgan` verisi `ogrenci1/veri` branch'inde hazır (CP-A, CP-B). PR ile main'e
-  gelene kadar `v0` ile çalışılır; Sprint 3.1'e kadar gelmezse o branch bu branch'e merge edilir.
+- Ö1, `ogrenci1/veri` için main'e ayrıca PR açacak; biz o branch'i şimdiden buraya merge ediyoruz.
 
 ---
 
@@ -20,15 +23,16 @@ Bir sprint "bitti" kriteri sağlanmadan sonrakine geçilmez.
 - [ ] `pytest` ve `00_smoke_test.ipynb` çalıştır
 - **Bitti:** testler geçiyor, `splits` özeti ekip arkadaşlarıyla aynı
 
-### Sprint 0.2: Branch ve veri erişimi
+### Sprint 0.2: Branch ve Ö1'in verisi
 - [x] `ArmaganBranch` main'den açıldı
-- [ ] Ö1'den `ogrenci1/veri` için PR açmasını iste
-- **Bitti:** `load_split("train", "v0")` çalışıyor
+- [ ] `origin/ogrenci1/veri` bu branch'e merge
+- [ ] Ö1'e main'e PR açmasını hatırlat
+- **Bitti:** `load_split("train", "clean")`, `"smote"`, `"ctgan"` çalışıyor
 
 ## Phase 1: Perceptron
 
 ### Sprint 1.1: Notebook iskeleti + baseline
-- [ ] `03_perceptron_lgbm.ipynb`, en üstte `VARIANT`
+- [ ] `03_perceptron_lgbm.ipynb`, en üstte `VARIANT = "clean"`
 - [ ] `DummyClassifier(strategy="stratified")` metrikleri
 - **Kavramlar:** macro-F1, PR-AUC, accuracy neden yanıltıcı
 
@@ -50,33 +54,32 @@ Bir sprint "bitti" kriteri sağlanmadan sonrakine geçilmez.
 
 ### Sprint 2.2: Optuna
 - [ ] Arama uzayı (ekip planı Bölüm 8, Adım 3), `TPESampler(seed=SEED)`, `MedianPruner`
-- [ ] Study `sqlite:///models/optuna_lgbm.db`; v0'da 10 deneme
+- [ ] Study `sqlite:///models/optuna_lgbm.db`; önce 10 deneme (süre ölçümü), sonra 50
 - **Kavramlar:** TPE, pruner, neden PR-AUC optimize ediliyor
 
 ### Sprint 2.3: Çıktılar + erken teslim
 - [ ] En iyi parametreler, CV ortalama ± std, `figures/extra_optuna_*.png`
 - [ ] `models/importance/lgbm_importance.csv` (feature, gain, split)
-- [ ] v0 tahminleri: `models/preds/{perceptron,lgbm}.csv` push (Ö3 için)
+- [ ] Clean tahminleri: `models/preds/{perceptron,lgbm}.csv` push (Ö3 grafikleri için)
 
-## Phase 3: Gerçek veri ve final
+## Phase 3: Varyantlar ve final
 
-### Sprint 3.1: `clean`'e geçiş
-- [ ] `VARIANT = "clean"`, Perceptron taraması + 50 denemelik Optuna yeniden
-
-### Sprint 3.2: Varyant karşılaştırması
+### Sprint 3.1: Varyant karşılaştırması
 - [ ] 2 model × {clean, smote, ctgan}, yalnızca gerçek val'de; artırılmış veride CV yok
 - [ ] Dengelenmiş veride `scale_pos_weight=1`
 - [ ] `reports/train_variant_comparison.csv`
+- [ ] Ö1'in bulgusuyla kıyas: sabit parametreli LGBM'de artırma kazanç sağlamadı
+  (val Macro-F1 0,707 → SMOTE 0,698 / CTGAN 0,689, `reports/tstr_trtr.csv`)
 - **Kavramlar:** SMOTE + CV sızıntısı, `scale_pos_weight` vs SMOTE
 
-### Sprint 3.3: Final + CP-C
+### Sprint 3.2: Final + CP-C
 - [ ] En iyi varyantla final eğitim, eşik val'de, test'e tek tahmin
 - [ ] Tahmin dosyaları + importance → PR (CP-C)
 
 ## Phase 4: Savunma
 
 ### Sprint 4.1: Ö1'in kodu
-- [ ] `01_data_quality_mvi` hücre hücre; ters anlatım
+- [ ] `01_data_quality_mvi` hücre hücre; ters anlatım (ekip planı satır 271)
 
 ### Sprint 4.2: Prova
 - [ ] Kendi notebook'unu süre tutarak anlat
