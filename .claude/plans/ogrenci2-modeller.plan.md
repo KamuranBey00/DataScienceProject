@@ -101,8 +101,12 @@ doğrudan `VARIANT = "clean"` ile başlanır. Artırılmış train setleri: `smo
 - **Kavramlar:** SMOTE + CV sızıntısı, `scale_pos_weight` vs SMOTE
 
 ### Sprint 3.2: Final + CP-C
-- [ ] En iyi varyantla final eğitim, eşik val'de, test'e tek tahmin
-- [ ] Tahmin dosyaları + importance → PR (CP-C)
+- [x] En iyi varyantla (`clean`) final eğitim, eşik val'de, test'e tek tahmin
+- [x] `models/preds/{perceptron,lgbm}.csv` (4495 test satırı, `load_preds` sözleşmesi geçiyor)
+- Sonuç (test): LGBM macro-F1 0,699, ROC-AUC 0,772, PR-AUC 0,552; Perceptron 0,617 / 0,647 /
+  0,334. Final Perceptron `SEED=42` val'de 0,594 (5 tohum ort. 0,636) → tohum val'e göre
+  seçilmedi, gürültüye göre seçim olurdu
+- [ ] Tahmin dosyaları + importance → main'e PR (CP-C)
 
 ## Phase 4: Savunma
 
