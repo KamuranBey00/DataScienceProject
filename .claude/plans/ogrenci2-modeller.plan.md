@@ -69,8 +69,14 @@ doğrudan `VARIANT = "clean"` ile başlanır. Artırılmış train setleri: `smo
 - **Kavramlar:** gradient boosting, early stopping, `categorical_feature`
 
 ### Sprint 2.2: Optuna
-- [ ] Arama uzayı (ekip planı Bölüm 8, Adım 3), `TPESampler(seed=SEED)`, `MedianPruner`
-- [ ] Study `sqlite:///models/optuna_lgbm.db`; önce 10 deneme (süre ölçümü), sonra 50
+- [x] Arama uzayı (ekip planı Bölüm 8, Adım 3), `TPESampler(seed=SEED)`, `MedianPruner`
+- [x] Study `sqlite:///models/optuna_lgbm.db`; önce 10 deneme (süre ölçümü), sonra 50
+- Sonuç: #32 → CV PR-AUC 0,567 ± 0,013 (varsayılan 0,563), 176 ağaç, lr 0,017, num_leaves 66,
+  scale_pos_weight ≈ 1. Val macro-F1 0,711 (varsayılan 0,707), PR-AUC aynı → kazanç std altında
+- Tuzak notu: pruner'a koşu *ortalaması* raporlanınca 50 denemede hiç kesme olmadı (pruner
+  denemenin tüm adımlardaki en iyisini kullanır, ortalama fold'larla düşer) → kümülatif *toplam*
+  raporlandı: 30/50 kesildi, 13 → 9 sn/deneme. Kesilen denemenin `value`'su da toplam olduğu
+  için sıralama yalnızca COMPLETE denemelerle yapılır
 - **Kavramlar:** TPE, pruner, neden PR-AUC optimize ediliyor
 
 ### Sprint 2.3: Çıktılar + erken teslim
