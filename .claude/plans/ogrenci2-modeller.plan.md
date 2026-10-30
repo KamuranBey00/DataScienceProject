@@ -32,8 +32,9 @@ doğrudan `VARIANT = "clean"` ile başlanır. Artırılmış train setleri: `smo
 ## Phase 1: Perceptron
 
 ### Sprint 1.1: Notebook iskeleti + baseline
-- [ ] `03_perceptron_lgbm.ipynb`, en üstte `VARIANT = "clean"`
-- [ ] `DummyClassifier(strategy="stratified")` metrikleri
+- [x] `03_perceptron_lgbm.ipynb`, en üstte `VARIANT = "clean"`
+- [x] `DummyClassifier` metrikleri (val): stratified macro-F1 0,502 / PR-AUC 0,222;
+  most_frequent accuracy 0,779 ama macro-F1 0,438
 - **Kavramlar:** macro-F1, PR-AUC, accuracy neden yanıltıcı
 
 ### Sprint 1.2: Perceptron taraması
