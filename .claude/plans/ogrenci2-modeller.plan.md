@@ -80,9 +80,12 @@ doğrudan `VARIANT = "clean"` ile başlanır. Artırılmış train setleri: `smo
 - **Kavramlar:** TPE, pruner, neden PR-AUC optimize ediliyor
 
 ### Sprint 2.3: Çıktılar + erken teslim
-- [ ] En iyi parametreler, CV ortalama ± std, `figures/extra_optuna_*.png`
-- [ ] `models/importance/lgbm_importance.csv` (feature, gain, split)
-- [ ] Clean tahminleri: `models/preds/{perceptron,lgbm}.csv` push (Ö3 grafikleri için)
+- [x] En iyi parametreler, CV ortalama ± std, `figures/extra_optuna_{history,importance}.png`
+  (plotly/kaleido kurulu değil → matplotlib, proje stiliyle)
+- [x] `models/importance/lgbm_importance.csv` (feature, gain, split)
+- Sonuç: PAY_0 gain'in %33'ü (split'te 15.), BILL_AMT1/LIMIT_BAL split'te 1-2 ama gain ≈%5.
+  fANOVA düz (ilk üç ≈%18): skor yüzeyi düz, Optuna kazancının küçük olmasıyla tutarlı
+- ~~Clean test tahminleri erken~~ → 3.2'ye bırakıldı (test'e yalnızca bir kez tahmin)
 
 ## Phase 3: Varyantlar ve final
 
