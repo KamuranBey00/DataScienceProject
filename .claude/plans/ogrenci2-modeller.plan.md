@@ -19,8 +19,8 @@ doğrudan `VARIANT = "clean"` ile başlanır. Artırılmış train setleri: `smo
 ## Phase 0: Hazırlık
 
 ### Sprint 0.1: Ortam
-- [ ] `py -3.11 -m venv .venv`, torch CPU, `pip install -r requirements.txt`
-- [ ] `pytest` ve `00_smoke_test.ipynb` çalıştır
+- [x] `py -3.11 -m venv .venv`, torch CPU, `pip install -r requirements.txt`
+- [x] `pytest` ve `00_smoke_test.ipynb` çalıştır (7 test geçti, özet `6552357087371317484` = Ö1'inki)
 - **Bitti:** testler geçiyor, `splits` özeti ekip arkadaşlarıyla aynı
 
 ### Sprint 0.2: Branch ve Ö1'in verisi
