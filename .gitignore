@@ -18,6 +18,7 @@ lightning_logs/
 
 # Local tooling / course material
 .claude/settings.local.json
+.omc/
 *.docx
 
 # Superseded drafts
