@@ -1,0 +1,18 @@
+{
+  "number": 32,
+  "value": 0.5667345667864508,
+  "params": {
+    "limit_depth": true,
+    "num_leaves": 66,
+    "learning_rate": 0.016541251983663744,
+    "max_depth": 9,
+    "min_child_samples": 14,
+    "subsample": 0.5842837418161255,
+    "colsample_bytree": 0.7267333552271974,
+    "reg_alpha": 0.7594668087771496,
+    "reg_lambda": 0.0726707812690815,
+    "scale_pos_weight": 1.0057716986140346
+  },
+  "best_iter": 176,
+  "pr_auc_std": 0.012461495715307774
+}
