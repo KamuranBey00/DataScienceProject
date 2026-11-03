@@ -5,3 +5,7 @@ target-version = ["py310"]
 [tool.pytest.ini_options]
 pythonpath = ["."]
 testpaths = ["tests"]
+
+[tool.nbqa.addopts]
+# The first notebook cell has to extend sys.path before importing src.
+flake8 = ["--extend-ignore=E203,E402"]
