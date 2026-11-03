@@ -128,21 +128,24 @@ def plot_cm_grid(models: dict[str, tuple]):
 
     models: {name: (y_true, y_pred, threshold)}.
     """
-    fig, axes = plt.subplots(1, len(models), figsize=(4 * len(models), 4), squeeze=False)
+    fig, axes = plt.subplots(1, len(models), figsize=(4.5 * len(models), 4.5), squeeze=False)
     axes = axes[0]
     for ax, (name, (y_true, y_pred, threshold)) in zip(axes, models.items()):
         cm = confusion_matrix(y_true, y_pred, normalize="true")
         im = ax.imshow(cm, cmap=SEQUENTIAL, vmin=0, vmax=1)
         for i in range(cm.shape[0]):
             for j in range(cm.shape[1]):
-                ax.text(j, i, f"{cm[i, j]:.2f}", ha="center", va="center", color=INK)
+                color = "white" if cm[i, j] > 0.6 else INK
+                ax.text(j, i, f"{cm[i, j]:.2f}", ha="center", va="center", color=color, fontsize=15)
         ax.set(
-            title=f"{name} (eşik={threshold:.2f})",
+            title=f"{name}\n(eşik={threshold:.2f})",
             xlabel="Tahmin",
             ylabel="Gerçek",
             xticks=[0, 1],
             yticks=[0, 1],
         )
+        ax.tick_params(labelsize=11)
+        ax.title.set_fontsize(12)
     fig.colorbar(im, ax=axes, fraction=0.046, pad=0.04, label="oran")
     return fig
 
@@ -158,28 +161,29 @@ def plot_importance_and_masks(step_masks, tabnet_importance, lgbm_importance, fe
     total = lgbm_norm.sum()
     lgbm_norm = lgbm_norm / total if total > 0 else lgbm_norm
 
-    fig, (ax_mask, ax_tabnet, ax_lgbm) = plt.subplots(1, 3, figsize=(15, 5))
+    n = len(feature_names)
+    fig, (ax_mask, ax_tabnet, ax_lgbm) = plt.subplots(1, 3, figsize=(17, max(6, n * 0.3)))
 
     im = ax_mask.imshow(step_masks, cmap=SEQUENTIAL, aspect="auto")
     ax_mask.set(
         title="TabNet adım maskeleri",
         xlabel="özellik",
         ylabel="adım",
-        xticks=range(len(feature_names)),
+        xticks=range(n),
         yticks=range(len(step_masks)),
     )
-    ax_mask.set_xticklabels(feature_names, rotation=90)
+    ax_mask.set_xticklabels(feature_names, rotation=45, ha="right", fontsize=8)
     fig.colorbar(im, ax=ax_mask, fraction=0.046, pad=0.04)
 
-    y_pos = range(len(feature_names))
+    y_pos = range(n)
     ax_tabnet.barh(y_pos, tabnet_importance, color=SERIES[1])
     ax_tabnet.set(title="TabNet global önem", yticks=y_pos)
-    ax_tabnet.set_yticklabels(feature_names)
+    ax_tabnet.set_yticklabels(feature_names, fontsize=9)
     ax_tabnet.invert_yaxis()
 
     ax_lgbm.barh(y_pos, lgbm_norm, color=SERIES[2])
     ax_lgbm.set(title="LGBM gain önemi (normalize)", yticks=y_pos)
-    ax_lgbm.set_yticklabels(feature_names)
+    ax_lgbm.set_yticklabels(feature_names, fontsize=9)
     ax_lgbm.invert_yaxis()
 
     fig.tight_layout()
@@ -188,25 +192,26 @@ def plot_importance_and_masks(step_masks, tabnet_importance, lgbm_importance, fe
 
 def plot_missingness(df: pd.DataFrame):
     """Grafik 1 (final hali): msno matrix + heatmap + dendrogram, 1x3."""
-    fig, axes = plt.subplots(1, 3, figsize=(18, 5))
-    msno.matrix(df, ax=axes[0], sparkline=False)
-    axes[0].set_title("Eksiklik matrisi")
-    msno.heatmap(df, ax=axes[1], cmap=DIVERGING)
-    axes[1].set_title("Eksiklik korelasyonu")
-    msno.dendrogram(df, ax=axes[2])
-    axes[2].set_title("Eksiklik dendrogramı")
+    fig, axes = plt.subplots(1, 3, figsize=(20, 7))
+    msno.matrix(df, ax=axes[0], sparkline=False, fontsize=9)
+    axes[0].set_title("Eksiklik matrisi", fontsize=13, pad=12)
+    msno.heatmap(df, ax=axes[1], cmap=DIVERGING, fontsize=8)
+    axes[1].set_title("Eksiklik korelasyonu", fontsize=13, pad=12)
+    msno.dendrogram(df, ax=axes[2], fontsize=9)
+    axes[2].set_title("Eksiklik dendrogramı", fontsize=13, pad=12)
     fig.tight_layout()
     return fig
 
 
 def plot_kde_grid(real: pd.DataFrame, smote: pd.DataFrame, ctgan: pd.DataFrame, columns):
     """Grafik 2 (final hali): 2x3 KDE grid, real/SMOTE/CTGAN overlaid per column."""
-    fig, axes = plt.subplots(2, 3, figsize=(15, 8))
+    fig, axes = plt.subplots(2, 3, figsize=(16, 9))
     for ax, col in zip(axes.flat, columns):
         for label, data, color in zip(["real", "smote", "ctgan"], [real, smote, ctgan], SERIES):
-            sns.kdeplot(data[col], ax=ax, label=label, color=color, fill=False)
-        ax.set_title(col)
-    axes.flat[0].legend()
+            sns.kdeplot(data[col], ax=ax, label=label, color=color, fill=False, linewidth=2.2)
+        ax.set_title(col, fontsize=12)
+        ax.tick_params(labelsize=9)
+    axes.flat[0].legend(fontsize=10)
     fig.tight_layout()
     return fig
 
@@ -217,16 +222,17 @@ def plot_corr_diff(corr_real: pd.DataFrame, corr_smote: pd.DataFrame, corr_ctgan
     diff_ctgan = (corr_real - corr_ctgan).abs()
     vmax = max(diff_smote.to_numpy().max(), diff_ctgan.to_numpy().max())
 
-    fig, axes = plt.subplots(1, 2, figsize=(13, 5.5))
+    n = len(corr_real.columns)
+    fig, axes = plt.subplots(1, 2, figsize=(max(13, n * 0.6), max(6, n * 0.3)))
     im = None
     for ax, diff, title in zip(
         axes, [diff_smote, diff_ctgan], ["|Corr_real - Corr_SMOTE|", "|Corr_real - Corr_CTGAN|"]
     ):
         im = ax.imshow(diff, cmap=SEQUENTIAL, vmin=0, vmax=vmax)
-        ax.set_title(title)
+        ax.set_title(title, fontsize=12)
         ax.set_xticks(range(len(diff.columns)))
-        ax.set_xticklabels(diff.columns, rotation=90)
+        ax.set_xticklabels(diff.columns, rotation=45, ha="right", fontsize=8)
         ax.set_yticks(range(len(diff.index)))
-        ax.set_yticklabels(diff.index)
+        ax.set_yticklabels(diff.index, fontsize=8)
     fig.colorbar(im, ax=axes, fraction=0.046, pad=0.04)
     return fig

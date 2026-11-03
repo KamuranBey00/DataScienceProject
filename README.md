@@ -10,6 +10,10 @@ Bu projede dengesiz bir tablo verisi üzerinde uçtan uca bir sınıflandırma h
 **Veri seti:** [Default of Credit Card Clients (UCI #350)](https://archive.ics.uci.edu/dataset/350)
 **Ekip planı:** [`.claude/plans/ekip-is-paylasimi.plan.md`](.claude/plans/ekip-is-paylasimi.plan.md)
 
+**Durum:** Bu README ve sonuçlar `o3/kadirgonullu` branch'inde üretildi (Ö1'in `ogrenci1/veri`
+ve Ö2'nin `ArmaganBranch`'i buraya merge edildi). Hiçbir branch henüz `main`'e resmi PR ile
+birleştirilmedi — teslim öncesi bu adım tamamlanmalı.
+
 ## Kısıtlar
 
 Değerler `01_data_quality_mvi` notebook'unun çıktısından alındı (`reports/constraints.csv`).
@@ -84,7 +88,7 @@ Test setinde, val'de seçilen eşikle (`reports/final_metrics.csv`):
 
 \*Accuracy sadece bilgi amaçlı; ana metrikler Macro-F1 ve PR-AUC (dengesiz veri).
 
-LightGBM ve TabNet birbirine çok yakın performans gösteriyor; her ikisi de en önemli özellik olarak `PAY_0`'ı (son ödeme durumu) buluyor (Grafik 4). Perceptron, doğrusal karar sınırı nedeniyle geride kalıyor.
+LightGBM ve TabNet'in Macro-F1'i birbirine çok yakın (fark ≈0,002), ama eşikten bağımsız metriklerde (ROC-AUC ≈0,772 vs ≈0,756, özellikle PR-AUC ≈0,552 vs ≈0,521) LightGBM tutarlı şekilde önde. Her ikisi de en önemli özellik olarak `PAY_0`'ı (son ödeme durumu) buluyor (Grafik 4). Perceptron, doğrusal karar sınırı nedeniyle üç metrikte de belirgin şekilde geride.
 
 **MVI karşılaştırması** (`reports/mvi_comparison.csv`): MICE (BayesianRidge) en düşük NRMSE'yi (0,446) veriyor; model faydası açısından (val Macro-F1) üç yöntem de birbirine yakın, baseline'a (median/mode) göre KNN ve MICE hafif üstün.
 
