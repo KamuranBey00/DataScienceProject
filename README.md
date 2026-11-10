@@ -10,17 +10,21 @@ Bu projede dengesiz bir tablo verisi üzerinde uçtan uca bir sınıflandırma h
 **Veri seti:** [Default of Credit Card Clients (UCI #350)](https://archive.ics.uci.edu/dataset/350)
 **Ekip planı:** [`.claude/plans/ekip-is-paylasimi.plan.md`](.claude/plans/ekip-is-paylasimi.plan.md)
 
+**Durum:** Bu README ve sonuçlar `o3/kadirgonullu` branch'inde üretildi (Ö1'in `ogrenci1/veri`
+ve Ö2'nin `ArmaganBranch`'i buraya merge edildi). Hiçbir branch henüz `main`'e resmi PR ile
+birleştirilmedi — teslim öncesi bu adım tamamlanmalı.
+
 ## Kısıtlar
 
-Değerler `01_data_quality_mvi` notebook'u çalışınca dolacak.
+Değerler `01_data_quality_mvi` notebook'unun çıktısından alındı (`reports/constraints.csv`).
 
 | Kısıt | Gerekli | Bu proje |
 |---|---|---|
-| Satır | ≥ 20.000 | |
+| Satır | ≥ 20.000 | 29.965 (35 duplicate atıldıktan sonra) |
 | Özellik | ≥ 20 | 23 |
-| Kategorik oranı | ≥ %30 | 9/23 ≈ %39 |
-| Eksik hücre | ≥ %5 | |
-| Dengesizlik | ≥ 1:3 | |
+| Kategorik oranı | ≥ %30 | %39,1 (9/23) |
+| Eksik hücre | ≥ %5 | %7,96 (~%5 MCAR + ~%3 MAR, kontrollü ekleme) |
+| Dengesizlik | ≥ 1:3 | 1:3,52 |
 
 ## Kurulum
 
@@ -71,3 +75,45 @@ X, y = to_xy(train)
 - **Ön işleme:** `src.features.make_preprocessor(kind)` kullanılır, `kind` = `"linear"`, `"tree"` veya `"tabnet"`. Ön işleyici her zaman sadece train'e fit edilir.
 - **Tahmin dosyaları:** `src.metrics.save_preds()` ile yazılır. Kolonlar: `row_id, y_true, y_score, y_pred, threshold`. Eşik val setinde `pick_threshold` ile seçilir.
 - **Ortak kod:** `src/` altındaki ortak dosyalar yalnızca PR ile değişir.
+
+## Final sonuçlar
+
+Test setinde, val'de seçilen eşikle (`reports/final_metrics.csv`):
+
+| Model | Macro-F1 | Weighted-F1 | ROC-AUC | PR-AUC | Accuracy* |
+|---|---|---|---|---|---|
+| **LightGBM** | **0,699** | 0,795 | **0,772** | **0,552** | 0,799 |
+| TabNet | 0,696 | 0,797 | 0,756 | 0,521 | 0,804 |
+| Perceptron | 0,617 | 0,740 | 0,647 | 0,334 | 0,745 |
+
+\*Accuracy sadece bilgi amaçlı; ana metrikler Macro-F1 ve PR-AUC (dengesiz veri).
+
+LightGBM ve TabNet'in Macro-F1'i birbirine çok yakın (fark ≈0,002), ama eşikten bağımsız metriklerde (ROC-AUC ≈0,772 vs ≈0,756, özellikle PR-AUC ≈0,552 vs ≈0,521) LightGBM tutarlı şekilde önde. Her ikisi de en önemli özellik olarak `PAY_0`'ı (son ödeme durumu) buluyor (Grafik 4). Perceptron, doğrusal karar sınırı nedeniyle üç metrikte de belirgin şekilde geride.
+
+**MVI karşılaştırması** (`reports/mvi_comparison.csv`): MICE (BayesianRidge) en düşük NRMSE'yi (0,446) veriyor; model faydası açısından (val Macro-F1) üç yöntem de birbirine yakın, baseline'a (median/mode) göre KNN ve MICE hafif üstün.
+
+**Sentetik veri fidelity** (`reports/fidelity_summary.csv`): SMOTE-NC, CTGAN'a göre gerçek dağılıma çok daha sadık kalıyor (ortalama |ΔCorr| 0,034 vs 0,064-0,082); CTGAN yeni örnek çeşitliliği sunuyor ama korelasyon yapısını daha fazla bozuyor.
+
+## Grafikler
+
+| Grafik 1 — Eksiklik | Grafik 2 — Gerçek/SMOTE/CTGAN |
+|---|---|
+| ![fig1](figures/final/fig1_missingness.png) | ![fig2](figures/final/fig2_real_vs_synth.png) |
+
+| Grafik 3 — Korelasyon farkı | Grafik 4 — Önem/maskeler |
+|---|---|
+| ![fig3](figures/final/fig3_corr_diff.png) | ![fig4](figures/fig4_importance_masks.png) |
+
+| Grafik 5 — ROC/PR | Grafik 6 — Confusion matrix |
+|---|---|
+| ![fig5](figures/fig5_roc_pr.png) | ![fig6](figures/fig6_confusion.png) |
+
+## Kim ne yaptı
+
+| Kişi | Rol | Katkı |
+|---|---|---|
+| Öğrenci 1 | Veri kalitesi & sentetik veri | Veri kalitesi analizi, %8 eksik veri ekleme (MCAR+MAR), 3 MVI yöntemi karşılaştırması, encoding/ölçekleme, SMOTE-NC + CTGAN, fidelity/TSTR-TRTR ölçümleri, Grafik 1-3 (ilk sürüm) |
+| Öğrenci 2 | Klasik & ağaç tabanlı modeller | Dummy baseline, Perceptron (parametre taraması + öğrenme eğrisi), LightGBM + Optuna (5-fold CV, PR-AUC), eğitim seti karşılaştırması (clean/SMOTE/CTGAN), final tahminler + importance |
+| Öğrenci 3 | TabNet & karşılaştırmalı analiz | TabNet kurulumu, grid tuning, eğitim eğrileri, final model + maskeler, `src/plots.py` grafik altyapısı, Grafik 1-6'nın final hali, final metrik tablosu, PEP-8 taraması |
+
+Ayrıntılı iş bölümü ve zaman çizelgesi için: [`.claude/plans/ekip-is-paylasimi.plan.md`](.claude/plans/ekip-is-paylasimi.plan.md)
