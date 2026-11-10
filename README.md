@@ -12,15 +12,15 @@ Bu projede dengesiz bir tablo verisi üzerinde uçtan uca bir sınıflandırma h
 
 ## Kısıtlar
 
-Değerler `01_data_quality_mvi` notebook'u çalışınca dolacak.
+Değerler `01_data_quality_mvi` notebook'unun çıktısından alındı (`reports/constraints.csv`).
 
 | Kısıt | Gerekli | Bu proje |
 |---|---|---|
-| Satır | ≥ 20.000 | |
+| Satır | ≥ 20.000 | 29.965 (35 duplicate atıldıktan sonra) |
 | Özellik | ≥ 20 | 23 |
-| Kategorik oranı | ≥ %30 | 9/23 ≈ %39 |
-| Eksik hücre | ≥ %5 | |
-| Dengesizlik | ≥ 1:3 | |
+| Kategorik oranı | ≥ %30 | %39,1 (9/23) |
+| Eksik hücre | ≥ %5 | %7,96 (~%5 MCAR + ~%3 MAR, kontrollü ekleme) |
+| Dengesizlik | ≥ 1:3 | 1:3,52 |
 
 ## Kurulum
 
